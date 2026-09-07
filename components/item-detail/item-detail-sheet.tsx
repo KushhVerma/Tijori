@@ -39,6 +39,7 @@ import {
 import { SourceIcon } from "@/components/library/source-icon"
 import { FallbackCover } from "@/components/library/fallback-cover"
 import { TagEditor } from "@/components/item-detail/tag-editor"
+import { MoveToFolderMenu } from "@/components/item-detail/move-to-folder-menu"
 
 export function ItemDetailSheet({
   item,
@@ -178,6 +179,7 @@ function ItemDetailBody({ item, onClose }: { item: ResolvedItem; onClose: () => 
             >
               <HugeiconsIcon icon={StarIcon} className={cn("size-4", favorite && "fill-current text-primary")} />
             </Button>
+            <MoveToFolderMenu itemId={item.id} />
             {item.url && (
               <Button variant="ghost" size="icon-sm" render={<a href={item.url} target="_blank" rel="noopener noreferrer" />}>
                 <HugeiconsIcon icon={ExternalLinkIcon} className="size-4" />

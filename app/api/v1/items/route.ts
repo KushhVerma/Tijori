@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import { resolveActor } from "@/lib/auth/resolve-actor"
 import * as itemsService from "@/lib/items/service"
+import * as foldersService from "@/lib/folders/service"
 import { detectSourceFromUrl, extractDomain } from "@/lib/items/source-detection"
 import { resolvePreview } from "@/lib/items/enrich"
 import { defaultTitle, sourceMeta } from "@/lib/items/constants"
@@ -23,6 +24,9 @@ const createItemSchema = z.object({
   mediaKey: z.string().optional(),
   mediaKind: z.enum(["image", "video"]).optional(),
   tagNames: z.array(z.string()).optional(),
+  /** Optional — additive, same as the "Move to…" menu in the web app. The
+   * item still lands in its normal source category either way. */
+  folderId: z.string().optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -91,6 +95,13 @@ export async function POST(request: NextRequest) {
     ingestStatus: "ready",
     tagNames: input.tagNames,
   })
+
+  if (input.folderId) {
+    await foldersService.addItemToFolder(actor.supabase, item.id, input.folderId).catch(() => {
+      // The item itself is already saved successfully — a failed folder
+      // association shouldn't fail the whole request.
+    })
+  }
 
   return NextResponse.json({ item, sourceSlug: sourceMeta(sourceType).slug }, { status: 201 })
 }

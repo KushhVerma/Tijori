@@ -76,6 +76,21 @@ export type ApiTokenRow = {
   created_at: string
 }
 
+// Folders: a second, independent way to group items alongside their source
+// category — adding an item to a folder never removes it from anywhere
+// else. Same many-to-many shape as tags/item_tags.
+export type FolderRow = {
+  id: string
+  user_id: string
+  name: string
+  created_at: string
+}
+
+export type ItemFolderRow = {
+  item_id: string
+  folder_id: string
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -101,6 +116,18 @@ export type Database = {
         Row: ApiTokenRow
         Insert: Partial<ApiTokenRow> & Pick<ApiTokenRow, "user_id" | "name" | "token_hash">
         Update: Partial<ApiTokenRow>
+        Relationships: []
+      }
+      folders: {
+        Row: FolderRow
+        Insert: Partial<FolderRow> & Pick<FolderRow, "user_id" | "name">
+        Update: Partial<FolderRow>
+        Relationships: []
+      }
+      item_folders: {
+        Row: ItemFolderRow
+        Insert: ItemFolderRow
+        Update: Partial<ItemFolderRow>
         Relationships: []
       }
     }

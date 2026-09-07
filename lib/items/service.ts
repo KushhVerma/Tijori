@@ -91,6 +91,17 @@ export async function listItems(
     query = query.in("id", ids)
   }
 
+  if (filters.folderId) {
+    const { data, error } = await supabase
+      .from("item_folders")
+      .select("item_id")
+      .eq("folder_id", filters.folderId)
+    if (error) throw error
+    const ids = (data ?? []).map((r) => r.item_id)
+    if (ids.length === 0) return []
+    query = query.in("id", ids)
+  }
+
   if (filters.query) {
     const ids = await matchingItemIds(supabase, userId, filters.query)
     if (ids.length === 0) return []

@@ -21,6 +21,7 @@ export interface ListItemsFilters {
   /** Only meaningful when sourceType is "x" — the Posts/Articles sub-tabs. */
   xKind?: XKind
   tagId?: string
+  folderId?: string
   favorite?: boolean
   /** undefined = no filter, false = Inbox-only, true = organized-only */
   organized?: boolean

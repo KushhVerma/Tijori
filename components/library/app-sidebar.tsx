@@ -10,6 +10,7 @@ import {
   InboxIcon,
   StarIcon,
   Tag01Icon,
+  Folder01Icon,
   SettingsIcon,
   LogoutIcon,
   Sun03Icon,
@@ -18,6 +19,7 @@ import {
 
 import { SOURCE_TYPES } from "@/lib/items/constants"
 import { createClient } from "@/lib/supabase/client"
+import type { FolderRow } from "@/lib/supabase/types"
 import { cn } from "@/lib/utils"
 import {
   Sidebar,
@@ -25,14 +27,22 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar"
+import { NewFolderDialog } from "@/components/library/new-folder-dialog"
 
-export function AppSidebar({ userEmail }: { userEmail: string | null }) {
+export function AppSidebar({
+  userEmail,
+  folders,
+}: {
+  userEmail: string | null
+  folders: FolderRow[]
+}) {
   const pathname = usePathname()
   const router = useRouter()
   const { resolvedTheme, setTheme } = useTheme()
@@ -123,6 +133,29 @@ export function AppSidebar({ userEmail }: { userEmail: string | null }) {
                   >
                     <HugeiconsIcon icon={source.icon} />
                     <span>{source.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarSeparator />
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Folders</SidebarGroupLabel>
+          <NewFolderDialog />
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {folders.map((folder) => (
+                <SidebarMenuItem key={folder.id}>
+                  <SidebarMenuButton
+                    render={<Link href={`/folder/${folder.id}`} />}
+                    isActive={pathname === `/folder/${folder.id}`}
+                    tooltip={folder.name}
+                  >
+                    <HugeiconsIcon icon={Folder01Icon} />
+                    <span>{folder.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
