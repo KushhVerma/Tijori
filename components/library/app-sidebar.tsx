@@ -122,6 +122,7 @@ export function AppSidebar({
         <SidebarSeparator />
 
         <SidebarGroup>
+          <SidebarGroupLabel>Sources</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {SOURCE_TYPES.map((source) => (
